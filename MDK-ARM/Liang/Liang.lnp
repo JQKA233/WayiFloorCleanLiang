@@ -1,0 +1,27 @@
+--cpu Cortex-M3
+"liang\startup_stm32f103xb.o"
+"liang\main.o"
+"liang\gpio.o"
+"liang\tim.o"
+"liang\usart.o"
+"liang\stm32f1xx_it.o"
+"liang\stm32f1xx_hal_msp.o"
+"liang\stm32f1xx_hal_gpio_ex.o"
+"liang\stm32f1xx_hal_tim.o"
+"liang\stm32f1xx_hal_tim_ex.o"
+"liang\stm32f1xx_hal.o"
+"liang\stm32f1xx_hal_rcc.o"
+"liang\stm32f1xx_hal_rcc_ex.o"
+"liang\stm32f1xx_hal_gpio.o"
+"liang\stm32f1xx_hal_dma.o"
+"liang\stm32f1xx_hal_cortex.o"
+"liang\stm32f1xx_hal_pwr.o"
+"liang\stm32f1xx_hal_flash.o"
+"liang\stm32f1xx_hal_flash_ex.o"
+"liang\stm32f1xx_hal_exti.o"
+"liang\stm32f1xx_hal_uart.o"
+"liang\system_stm32f1xx.o"
+--strict --scatter "Liang\Liang.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "Liang.map" -o Liang\Liang.axf
