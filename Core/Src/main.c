@@ -59,6 +59,9 @@ const float K = 1;
 uint8_t buf[8];
 double sx,sy,oa;
 uint8_t pos[10];
+int qianduo = 0;
+int houduo = 0;
+int intake = 0;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -174,7 +177,10 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1); 
-	__HAL_TIM_SetCompare(&htim3, TIM_CHANNEL_1,1500);
+	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_2);
+	
+	//__HAL_TIM_SetCompare(&htim3, TIM_CHANNEL_2,1150);
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -185,19 +191,17 @@ int main(void)
 	  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8,GPIO_PIN_SET);
 	  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_7,GPIO_PIN_SET);
 	  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_6,GPIO_PIN_SET);
-	  int index;
 	  
 	  
 	  HAL_UART_Receive(&huart1,buf,1,0xFFFF);
-	  if(buf[0]=='D'){
+	  if(buf[0]=='F'){
 		  oa=1;
 	  }
-	  if(buf[0]=='F'){
+	  if(buf[0]=='D'){
 		  oa=-1;
 	  }
 	  if(buf[0]=='E'){
-		  oa=0
-		  ;
+		  oa=0;
 	  }
 	  if(buf[0]=='G'){
 		  sx=1;
@@ -215,12 +219,39 @@ int main(void)
 		  sx=0;
 		  sy=0;
 	  }
-	  if(buf[0] == 'A'){
-		  __HAL_TIM_SetCompare(&htim3, TIM_CHANNEL_1,900);
+	  if(buf[0] == 'A'&&!qianduo){
+		  __HAL_TIM_SetCompare(&htim3, TIM_CHANNEL_1,1750);
+		  qianduo = 1;
+		  buf[0] = 0; 
 	  }
-	  if(buf[0] == 'B'){
+	  if(buf[0] == 'A'&&qianduo){
 		  __HAL_TIM_SetCompare(&htim3, TIM_CHANNEL_1,1500);
+		  qianduo = 0;
+		  buf[0] = 0;
 	  }
+	  if(buf[0] == 'B'&&!houduo){
+		  __HAL_TIM_SetCompare(&htim3, TIM_CHANNEL_2,800);
+		  houduo = 1;
+		  buf[0] = 0;
+	  }
+	  if(buf[0] == 'B'&&houduo){
+		  __HAL_TIM_SetCompare(&htim3, TIM_CHANNEL_2,1150);
+		  houduo = 0;
+		  buf[0] = 0;
+	  }
+	  if(buf[0] == 'C'&&!intake){
+		  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1,GPIO_PIN_RESET);
+		  intake = 1;
+		  buf[0] = 0;
+	  }
+	  if(buf[0] == 'C'&&intake){
+		  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1,GPIO_PIN_SET);
+		  intake = 0;
+		  buf[0] = 0;
+		  
+	  }
+	  
+	  
 	  /*
 	  for(int i=0;i<8;i++){
 		  if(buf[i]==0x5A){
